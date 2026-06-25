@@ -445,7 +445,7 @@
                 <!-- Form Fields -->
                 <section class="form-section">
                     <div class="form-group">
-                        <label for="sku"><i class="fas fa-barcode"></i> SKU Number <span class="required">*</span></label>
+                        <label for="sku"><i class="fas fa-barcode"></i> SKU Code <span class="required">*</span></label>
                         <input type="text" id="sku" placeholder="e.g., ABC123" required>
                     </div>
                     <div class="form-group">
@@ -453,12 +453,12 @@
                         <input type="text" id="boxCode" placeholder="e.g., BOX001" required>
                     </div>
                     <div class="form-group">
-                        <label for="quantity"><i class="fas fa-sort-numeric-up"></i> Quantity <span class="required">*</span></label>
-                        <input type="number" id="quantity" min="1" placeholder="Number of items" required>
+                        <label for="quantity"><i class="fas fa-sort-numeric-up"></i> Affected Quantity <span class="required">*</span></label>
+                        <input type="number" id="quantity" min="1" placeholder="Number of affected items" required>
                     </div>
                     <div class="form-group">
-                        <label for="remarks"><i class="fas fa-pen"></i> Remarks</label>
-                        <textarea id="remarks" placeholder="Optional notes about issues/damage"></textarea>
+                        <label for="remarks"><i class="fas fa-clipboard-list"></i> Product Issue Remarks <span class="required">*</span></label>
+                        <textarea id="remarks" placeholder="Describe the product issue or damage in detail" required></textarea>
                     </div>
                 </section>
 
@@ -868,12 +868,14 @@
                 const sku = document.getElementById('sku').value.trim();
                 const boxCode = document.getElementById('boxCode').value.trim();
                 const quantity = document.getElementById('quantity').value.trim();
+                const remarks = document.getElementById('remarks').value.trim();
                 const fclDate = document.getElementById('fclDate').value;
                 const chinaDate = document.getElementById('chinaDate').value;
 
-                if (!sku) { this.showStatus('<i class="fas fa-exclamation-circle"></i> SKU is required.', 'error'); return; }
+                if (!sku) { this.showStatus('<i class="fas fa-exclamation-circle"></i> SKU Code is required.', 'error'); return; }
                 if (!boxCode) { this.showStatus('<i class="fas fa-exclamation-circle"></i> Box Code is required.', 'error'); return; }
-                if (!quantity || parseInt(quantity) < 1) { this.showStatus('<i class="fas fa-exclamation-circle"></i> Quantity must be at least 1.', 'error'); return; }
+                if (!quantity || parseInt(quantity) < 1) { this.showStatus('<i class="fas fa-exclamation-circle"></i> Affected Quantity must be at least 1.', 'error'); return; }
+                if (!remarks) { this.showStatus('<i class="fas fa-exclamation-circle"></i> Product Issue Remarks are required.', 'error'); return; }
                 if (!fclDate) { this.showStatus('<i class="fas fa-exclamation-circle"></i> FCL Date is required.', 'error'); return; }
                 if (!chinaDate) { this.showStatus('<i class="fas fa-exclamation-circle"></i> China Date is required.', 'error'); return; }
                 if (this.mediaItems.length === 0) { this.showStatus('<i class="fas fa-exclamation-circle"></i> Please add at least one image or video.', 'error'); return; }
@@ -887,7 +889,7 @@
                     quantity: parseInt(quantity),
                     fclDate,
                     chinaDate,
-                    remarks: document.getElementById('remarks').value.trim(),
+                    remarks: remarks,
                     timestamp: phTime.toISOString()
                 };
 
