@@ -5,7 +5,7 @@
 
 export const CONFIG = {
     // Google Apps Script Web App URL
-    GAS_URL: 'https://script.google.com/macros/s/AKfycbzzmPmhQOqkjbC6sFtYp66UNcr3jVv25pjZdJuWmq9ZyLrmS32vyCqzNCJU9ABxC3hCYg/exec',
+    GAS_URL: 'https://script.google.com/macros/s/AKfycbxAX0DaQaOons4tyiAdj7KNjtbF9yNZmeQWUyQPxUyvA-G7nlM7q4xlysSalM8AFYPIag/exec',
 
     // Main Drive Folder ID
     MAIN_FOLDER_ID: '1T_ViuMgRMoS3Ny3ktjubyjjhAMfWgUPJ',
