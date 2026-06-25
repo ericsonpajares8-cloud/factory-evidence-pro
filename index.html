@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>🏭 Factory Evidence Pro - PH</title>
-    <!-- Font Awesome for professional icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Keep your existing styles - they're fine */
         * {
             margin: 0;
             padding: 0;
@@ -528,7 +528,6 @@
             }
 
             init() {
-                // Set default dates
                 const phTime = this.getPhilippinesTime();
                 const today = phTime.toISOString().split('T')[0];
                 document.getElementById('fclDate').value = today;
@@ -538,8 +537,6 @@
                 this.renderGallery();
                 this.updateCounter();
                 this.updatePHTimeDisplay();
-
-                // Update PH time every minute
                 setInterval(() => this.updatePHTimeDisplay(), 60000);
             }
 
@@ -571,7 +568,6 @@
                 document.getElementById('cameraBtn').addEventListener('click', () => this.toggleCamera());
                 document.getElementById('capturePhotoBtn').addEventListener('click', () => this.capturePhoto());
                 document.getElementById('stopCameraBtn').addEventListener('click', () => this.stopCamera());
-                
                 document.getElementById('recordBtn').addEventListener('click', () => this.toggleRecording());
                 document.getElementById('startRecordBtn').addEventListener('click', () => this.startRecording());
                 document.getElementById('stopRecordBtn').addEventListener('click', () => this.stopRecording());
@@ -604,7 +600,7 @@
                 if (type === 'video') {
                     const existingVideo = this.mediaItems.find(item => item.type === 'video');
                     if (existingVideo) {
-                        this.showStatus('<i class="fas fa-exclamation-circle"></i> Only one video allowed. Remove existing video first.', 'error');
+                        this.showStatus('<i class="fas fa-exclamation-circle"></i> Only one video allowed.', 'error');
                         return false;
                     }
                     if (file.size > CONFIG.MAX_VIDEO_SIZE) {
@@ -659,7 +655,6 @@
                             else video.pause();
                         });
                         div.appendChild(video);
-                        
                         const overlay = document.createElement('div');
                         overlay.className = 'video-overlay';
                         overlay.innerHTML = '<i class="fas fa-play"></i>';
@@ -751,7 +746,7 @@
 
             capturePhoto() {
                 if (!this.isCameraActive || !this.cameraStream) {
-                    this.showStatus('<i class="fas fa-exclamation-circle"></i> Camera not active. Start camera first.', 'error');
+                    this.showStatus('<i class="fas fa-exclamation-circle"></i> Camera not active.', 'error');
                     return;
                 }
 
@@ -765,7 +760,6 @@
                         this.addMediaItem(file, 'image');
                     })
                     .catch(() => {
-                        // Fallback
                         const preview = document.getElementById('cameraPreview');
                         const canvas = document.createElement('canvas');
                         canvas.width = preview.videoWidth || 640;
@@ -828,8 +822,7 @@
                     document.getElementById('recordBtn').innerHTML = '<i class="fas fa-stop"></i> Recording...';
                     this.showStatus('<i class="fas fa-circle" style="color:red;"></i> Recording... Tap Stop when done.', 'info');
                 } catch (error) {
-                    this.showStatus('<i class="fas fa-exclamation-circle"></i> Could not access audio. Recording video only.', 'info');
-                    // Fallback: record without audio
+                    this.showStatus('<i class="fas fa-exclamation-circle"></i> Recording video only (no audio).', 'info');
                     this.mediaRecorder = new MediaRecorder(this.cameraStream, { mimeType: 'video/mp4' });
                     this.recordedChunks = [];
 
@@ -872,13 +865,13 @@
                 const fclDate = document.getElementById('fclDate').value;
                 const chinaDate = document.getElementById('chinaDate').value;
 
-                if (!sku) { this.showStatus('<i class="fas fa-exclamation-circle"></i> SKU Code is required.', 'error'); return; }
-                if (!boxCode) { this.showStatus('<i class="fas fa-exclamation-circle"></i> Box Code is required.', 'error'); return; }
-                if (!quantity || parseInt(quantity) < 1) { this.showStatus('<i class="fas fa-exclamation-circle"></i> Affected Quantity must be at least 1.', 'error'); return; }
-                if (!remarks) { this.showStatus('<i class="fas fa-exclamation-circle"></i> Product Issue Remarks are required.', 'error'); return; }
-                if (!fclDate) { this.showStatus('<i class="fas fa-exclamation-circle"></i> FCL Date is required.', 'error'); return; }
-                if (!chinaDate) { this.showStatus('<i class="fas fa-exclamation-circle"></i> China Date is required.', 'error'); return; }
-                if (this.mediaItems.length === 0) { this.showStatus('<i class="fas fa-exclamation-circle"></i> Please add at least one image or video.', 'error'); return; }
+                if (!sku) { this.showStatus('SKU Code is required.', 'error'); return; }
+                if (!boxCode) { this.showStatus('Box Code is required.', 'error'); return; }
+                if (!quantity || parseInt(quantity) < 1) { this.showStatus('Affected Quantity must be at least 1.', 'error'); return; }
+                if (!remarks) { this.showStatus('Product Issue Remarks are required.', 'error'); return; }
+                if (!fclDate) { this.showStatus('FCL Date is required.', 'error'); return; }
+                if (!chinaDate) { this.showStatus('China Date is required.', 'error'); return; }
+                if (this.mediaItems.length === 0) { this.showStatus('Please add at least one image or video.', 'error'); return; }
 
                 // Prepare data
                 const phTime = this.getPhilippinesTime();
@@ -895,7 +888,7 @@
 
                 formData.append('data', JSON.stringify(data));
 
-                // Convert files to base64 for sending to GAS
+                // Convert files to base64
                 for (let i = 0; i < this.mediaItems.length; i++) {
                     const item = this.mediaItems[i];
                     try {
@@ -919,7 +912,7 @@
                     }
                 }
 
-                // Submit
+                // Submit - FIXED: Removed mode: 'no-cors'
                 const submitBtn = document.getElementById('submitBtn');
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
@@ -928,23 +921,29 @@
                 try {
                     const response = await fetch(CONFIG.GAS_URL, {
                         method: 'POST',
-                        body: formData,
-                        mode: 'no-cors'
+                        body: formData
                     });
 
-                    this.showStatus('<i class="fas fa-check-circle"></i> Evidence submitted successfully! Check your Google Drive.', 'success');
-                    
-                    // Reset form
-                    document.getElementById('sku').value = '';
-                    document.getElementById('boxCode').value = '';
-                    document.getElementById('quantity').value = '';
-                    document.getElementById('remarks').value = '';
-                    this.clearAllMedia();
-                    this.updateCounter();
-                    if (this.isCameraActive) this.stopCamera();
-                    
+                    const result = await response.json();
+                    console.log('Response:', result);
+
+                    if (result.success) {
+                        this.showStatus('✅ Evidence submitted successfully! Check your Google Drive.', 'success');
+                        
+                        // Reset form
+                        document.getElementById('sku').value = '';
+                        document.getElementById('boxCode').value = '';
+                        document.getElementById('quantity').value = '';
+                        document.getElementById('remarks').value = '';
+                        this.clearAllMedia();
+                        this.updateCounter();
+                        if (this.isCameraActive) this.stopCamera();
+                    } else {
+                        this.showStatus('❌ Error: ' + (result.error || 'Unknown error'), 'error');
+                    }
                 } catch (error) {
-                    this.showStatus(`<i class="fas fa-exclamation-circle"></i> Error: ${error.message}`, 'error');
+                    console.error('Fetch error:', error);
+                    this.showStatus('❌ Network error: ' + error.message, 'error');
                 } finally {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Evidence';
