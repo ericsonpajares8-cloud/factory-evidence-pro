@@ -22,12 +22,12 @@ export const CONFIG = {
 
     // Excel columns
     EXCEL_COLUMNS: [
-        'SKU',
+        'SKU Code',
         'Box Code',
-        'Quantity',
+        'Affected Quantity',
         'FCL Date',
         'China Date',
-        'Remarks',
+        'Product Issue Remarks',
         'Media Files',
         'Media Links',
         'Date Submitted (PH Time)'
